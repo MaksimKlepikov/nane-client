@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Opened room name
+          {{ $route.params.roomId || 'Nane Client' }}
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

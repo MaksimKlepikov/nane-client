@@ -12,6 +12,8 @@
         v-for="room in rooms"
         :key="room.name"
         clickable
+        :to="{ name: 'room', params: { roomId: room.name }}"
+        :replace="isChatOpened"
       >
         <q-item-section>
           <q-item-label>{{ room.name }}</q-item-label>
@@ -36,6 +38,9 @@ export default {
   computed: {
     rooms () {
       return Room.query().with('messages').get()
+    },
+    isChatOpened () {
+      return this.$route.params.roomId
     }
   },
   created () {
