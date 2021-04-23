@@ -1,4 +1,6 @@
-import Vue from 'vue'
 import axios from 'axios'
 
-Vue.prototype.$axios = axios
+export default async ({ Vue }) => {
+  axios.defaults.baseURL = process.env.API
+  Vue.prototype.$axios = axios
+}

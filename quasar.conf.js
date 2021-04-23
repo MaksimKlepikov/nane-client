@@ -21,7 +21,8 @@ module.exports = function (/* ctx */) {
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
 
-      'axios'
+      'axios',
+      'vue-native-websocket'
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -59,6 +60,10 @@ module.exports = function (/* ctx */) {
       // showProgress: false,
       // gzip: true,
       // analyze: true,
+      env: {
+        API_WS: 'wss://nane.tada.team/ws',
+        API: 'https://nane.tada.team/api'
+      },
 
       // Options below are automatically set depending on the env, set them if you want to override
       // extractCSS: false,
