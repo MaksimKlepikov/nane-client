@@ -44,7 +44,7 @@
     >
       <q-input
         v-model="messageToSendText"
-        maxlength="10500"
+        :maxlength="maxLength.message"
         input-style="max-height:50vh"
         rounded
         outlined
@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import { uid } from 'quasar'
 
 import { mapActions, mapGetters } from 'vuex'
 
@@ -95,7 +94,6 @@ export default {
   components: {
     ChatMessage
   },
-  pageSize: 15,
   async beforeRouteUpdate (to, from, next) {
     next()
     this.pagesLoaded = 1
@@ -122,7 +120,9 @@ export default {
       isMessagesOutdated: 'isMessagesOutdated'
     }),
     ...mapGetters('settings', {
-      isNoConnection: 'isNoConnection'
+      isNoConnection: 'isNoConnection',
+      maxLength: 'getMaxLengthSettings',
+      pageSize: 'getPageSize'
     }),
     isRoomMessagesOutdated () {
       return this.isMessagesOutdated(this.roomId)
@@ -137,7 +137,7 @@ export default {
       return this.getMessagesByRoom(this.roomId).length
     },
     messagesToShowCount () {
-      return this.$options.pageSize * this.pagesLoaded
+      return this.pageSize * this.pagesLoaded
     }
 
   },
@@ -186,7 +186,6 @@ export default {
         return
       }
       const newMessage = {
-        id: uid(),
         created: new Date(),
         sender: {
           username: this.getCurrentUser.username

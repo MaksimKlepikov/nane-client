@@ -12,7 +12,7 @@
           autofocus
           label="Room Name"
           lazy-rules
-          :maxlength="$options.roomNameMaxLength"
+          :maxlength="maxLength.roomName"
           :rules="[
             val => val && val.length > 0 || 'Please enter the name of the room',
             val => !rooms.some(room=>room.name===val) || 'Room is already exist',
@@ -22,7 +22,7 @@
       <q-card-section>
         <q-input
           v-model="firstMessage"
-          :maxlength="$options.messageMaxLength"
+          :maxlength="maxLength.message"
           input-style="max-height:50vh"
           outlined
           rounded
@@ -30,6 +30,7 @@
           bg-color="white"
           placeholder="Type a message"
           label="First Message"
+          :rules="[ val => val && val.length > 0 || 'Please type something']"
         />
       </q-card-section>
       <q-card-actions align="right">
@@ -52,12 +53,11 @@
 </template>
 
 <script>
-import { uid } from 'quasar'
+
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CreateRoomForm',
-  roomNameMaxLength: 50,
-  messageMaxLength: 10500,
   props: {
     rooms: {
       required: true,
@@ -76,6 +76,11 @@ export default {
       firstMessage: 'Room created'
     }
   },
+  computed: {
+    ...mapGetters('settings', {
+      maxLength: 'getMaxLengthSettings'
+    })
+  },
   methods: {
     show () {
       this.$refs.dialog.show()
@@ -91,7 +96,6 @@ export default {
 
     onSubmit () {
       const newMessage = {
-        id: uid(),
         created: new Date(),
         sender: {
           username: this.currentUsername

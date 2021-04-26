@@ -17,7 +17,7 @@
           autofocus
           label="Username"
           lazy-rules
-          :maxlength="$options.usernameMaxLength"
+          :maxlength="maxLength.username"
           :rules="[
             val => val && val.length > 0 || 'Please enter the username',
           ]"
@@ -44,13 +44,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  usernameMaxLength: 50,
   name: 'LoginForm',
   data () {
     return {
       username: ''
     }
+  },
+  computed: {
+    ...mapGetters('settings', {
+      maxLength: 'getMaxLengthSettings'
+    })
   },
   methods: {
     show () {
