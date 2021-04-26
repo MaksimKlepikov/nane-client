@@ -47,7 +47,7 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      // publicPath: 'some/nested/folder',
+      publicPath: 'nane-client',
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
