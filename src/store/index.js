@@ -1,15 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
-import VuexORM from '@vuex-orm/core'
-import VuexORMAxios from '@vuex-orm/plugin-axios'
-import createDatabase from './database'
 
-// import example from './module-example'
+import room from './room'
+import message from './message'
+import user from './user'
+import settings from './settings'
 
 Vue.use(Vuex)
-
-const database = createDatabase()
 
 /*
  * If not building with SSR mode, you can
@@ -21,14 +18,17 @@ const database = createDatabase()
  */
 
 export default function (/* { ssrContext } */) {
-  VuexORM.use(VuexORMAxios, { axios })
-
   const Store = new Vuex.Store({
-    plugins: [VuexORM.install(database)],
 
     // enable strict mode (adds overhead!)
     // for dev mode only
-    strict: process.env.DEBUGGING
+    strict: process.env.DEBUGGING,
+    modules: {
+      room,
+      message,
+      user,
+      settings
+    }
   })
 
   return Store
