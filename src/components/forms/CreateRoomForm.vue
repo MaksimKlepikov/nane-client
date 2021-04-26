@@ -21,6 +21,7 @@
       </q-card-section>
       <q-card-section>
         <q-input
+          ref="messageTextInput"
           v-model="firstMessage"
           :maxlength="maxLength.message"
           input-style="max-height:50vh"
@@ -103,7 +104,7 @@ export default {
         room: this.roomName,
         text: this.firstMessage
       }
-      if (this.$refs.roomNameInput.validate()) {
+      if (this.$refs.roomNameInput.validate() && this.$refs.messageTextInput.validate()) {
         this.$emit('ok', newMessage)
         this.hide()
       }

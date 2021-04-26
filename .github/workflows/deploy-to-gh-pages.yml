@@ -15,6 +15,7 @@ jobs:
         run: |
           npm install
           npm run build
+          cp ./dist/spa/index.html ./dist/spa/404.html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
