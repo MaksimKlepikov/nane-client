@@ -1,4 +1,6 @@
 
+import Chat from 'components/Chat'
+
 const routes = [
   {
     path: '/',
@@ -6,12 +8,25 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/Index.vue')
-      },
-      {
-        path: '/room/:roomId',
-        name: 'room',
-        component: () => import('pages/Index.vue')
+        component: () => import('pages/Index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'index',
+            components: {
+              'room-list-panel': () => import('components/RoomList.vue'),
+              'chat-panel': () => import('components/BlankChat.vue')
+            }
+          },
+          {
+            path: 'room/:roomId',
+            name: 'room',
+            components: {
+              'room-list-panel': () => import('components/RoomList.vue'),
+              'chat-panel': Chat
+            }
+          }
+        ]
       }
     ]
   },

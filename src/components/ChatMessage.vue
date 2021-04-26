@@ -1,29 +1,65 @@
 <template>
   <q-item
-    dark
-    style="max-width:500px"
-    class="rounded-borders chat__message chat__message_bg_my"
+    :dark="isMyMessage"
+    class="q-my-md rounded-borders chat__message"
+    :class="{'chat__message_bg_my':isMyMessage}"
   >
     <q-item-section>
       <q-item-label>
-        <span class="text-weight-bold">Username</span>
+        <span class="text-weight-bold">{{ message.sender.username }}</span>
       </q-item-label>
-      <q-item-label>Text message Text message Text message Text message Text message Text message Text message</q-item-label>
+      <q-item-label>
+        {{ message.text }}
+      </q-item-label>
       <q-item-label
         caption
         class="text-right"
       >
-        <span class="">Date</span>
+        <span class="">{{ timestamp }}</span>
       </q-item-label>
+    </q-item-section>
+    <q-item-section
+      v-if="loading"
+      side
+    >
+      <div class="row justify-end q-my-md">
+        <q-spinner
+          color="primary"
+          name="dots"
+          size="20px"
+        />
+      </div>
     </q-item-section>
   </q-item>
 </template>
 
 <script>
+import { date } from 'quasar'
+
 export default {
+  props: {
+    message: {
+      required: true,
+      type: Object,
+      default: () => null
+    },
+    loading: {
+      type: Boolean,
+      default: false
+
+    }
+  },
   // name: 'ComponentName',
   data () {
     return {}
+  },
+  computed: {
+    timestamp () {
+      return date.formatDate(this.message.created, 'HH:mm DD-MM-YYYY')
+    },
+    isMyMessage () {
+      return false
+    }
   }
 
 }
@@ -33,7 +69,8 @@ export default {
 
 .chat__message{
   background: $message-bg;
-  max-width:500px;
+  overflow-wrap: break-word;
+  white-space: pre-line;
 }
 .chat__message_bg_my{
   background: $message-bg-my;

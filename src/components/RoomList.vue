@@ -1,50 +1,85 @@
 <template>
-  <q-scroll-area class="">
-    <q-list>
+  <q-scroll-area>
+    <q-list separator>
       <q-item-label
         header
-        class="text-grey-8"
+        class="text-grey-8 row items-center"
       >
-        Rooms
+        <q-btn
+          :disable="isNoConnection"
+          outline
+          rounded
+          no-caps
+          color="primary"
+          icon="add"
+          label="Add Room"
+          @click="onAddRoom"
+        />
       </q-item-label>
-
-      <q-item
+      <room-list-item
         v-for="room in rooms"
         :key="room.name"
-        clickable
-        :to="{ name: 'room', params: { roomId: room.name }}"
-        :replace="isChatOpened"
-      >
-        <q-item-section>
-          <q-item-label>{{ room.name }}</q-item-label>
-          <q-item-label caption>
-            sender - last message
-          </q-item-label>
-        </q-item-section>
-      </q-item>
+        :room="room"
+      />
     </q-list>
   </q-scroll-area>
 </template>
 
 <script>
-
-import Room from 'src/store/room/model.js'
+import { mapActions, mapGetters } from 'vuex'
+import RoomListItem from 'components/RoomListItem.vue'
+import CreateRoomForm from 'src/components/forms/CreateRoomForm.vue'
 
 export default {
+  components: {
+    RoomListItem
+  },
   data () {
     return {
     }
   },
   computed: {
-    rooms () {
-      return Room.query().with('messages').get()
-    },
-    isChatOpened () {
-      return this.$route.params.roomId
-    }
+    ...mapGetters('room', {
+      rooms: 'getRooms'
+    }),
+    ...mapGetters('user', {
+      isLoggedIn: 'isLoggedIn',
+      getCurrentUser: 'getCurrentUser'
+    }),
+    ...mapGetters('settings', {
+      isNoConnection: 'isNoConnection'
+    })
   },
-  created () {
-    Room.api().fetch()
+  async created () {
+    await this.fetchAllRooms()
+  },
+  methods: {
+    ...mapActions('room', {
+      fetchAllRooms: 'fetchAll'
+    }),
+    ...mapActions('message', {
+      sendMessage: 'sendMessage'
+    }),
+    openCreateRoomDialog () {
+      return new Promise((resolve, reject) => this.$q.dialog({
+        component: CreateRoomForm,
+        rooms: this.rooms,
+        currentUsername: this.getCurrentUser.username,
+        parent: this
+      }).onOk(resolve).onCancel(reject))
+    },
+    async onAddRoom () {
+      if (!this.isLoggedIn) {
+        return this.$emit('ask-login')
+      }
+      try {
+        const newMessage = await this.openCreateRoomDialog()
+        await this.sendMessage(newMessage)
+        this.$router.push({ name: 'room', params: { roomId: newMessage.room } })
+      } catch (e) {
+        if (e) { console.error(e) }
+      }
+    }
   }
 }
 </script>
