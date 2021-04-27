@@ -43,6 +43,10 @@ export default {
       type: Object,
       default: () => null
     },
+    currentUser: {
+      type: Object,
+      default: () => null
+    },
     loading: {
       type: Boolean,
       default: false
@@ -58,7 +62,7 @@ export default {
       return date.formatDate(this.message.created, 'HH:mm DD-MM-YYYY')
     },
     isMyMessage () {
-      return false
+      return this.message.sender.username === this.currentUser?.username
     }
   }
 

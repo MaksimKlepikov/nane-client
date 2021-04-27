@@ -47,7 +47,7 @@ export default {
       users: 'getUsers',
       currentUser: 'getCurrentUser'
     }),
-    ...mapGetters('settings', {
+    ...mapGetters('websocket', {
       isNoConnection: 'isNoConnection'
     })
   },

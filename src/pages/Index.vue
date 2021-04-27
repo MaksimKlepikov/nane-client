@@ -40,8 +40,6 @@ export default {
       return this.$q.platform.is.desktop || this.isRoomSelected
     }
   },
-  watch: {
-  },
   methods: {
     pageStyleFn (offset) {
       // "offset" is a Number (pixels) that refers to the total

@@ -138,9 +138,10 @@ export default {
   computed: {
     ...mapGetters('user', {
       currentUser: 'getCurrentUser',
-      isLoggedIn: 'isLoggedIn'
+      isLoggedIn: 'isLoggedIn',
+      users: 'getUsers'
     }),
-    ...mapGetters('settings', {
+    ...mapGetters('websocket', {
       isNoConnection: 'isNoConnection'
     }),
     isShowMenuButton () {
@@ -151,9 +152,6 @@ export default {
     },
     toolbarTitle () {
       return this.$route.params.roomId || this.currentUser?.username
-    },
-    isLogin () {
-      return this.$route.path === '/login'
     }
   },
   methods: {
@@ -161,6 +159,9 @@ export default {
       login: 'login'
     }),
     askLogin () {
+      if (this.users.length === 0) {
+        return this.onLogin()
+      }
       this.openLeftDrawer()
       this.$q.notify({
         message: 'Please Log In',

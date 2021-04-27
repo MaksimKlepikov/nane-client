@@ -5,6 +5,7 @@ import room from './room'
 import message from './message'
 import user from './user'
 import settings from './settings'
+import websocket from './websocket'
 
 Vue.use(Vuex)
 
@@ -27,7 +28,8 @@ export default function (/* { ssrContext } */) {
       room,
       message,
       user,
-      settings
+      settings,
+      websocket
     }
   })
 

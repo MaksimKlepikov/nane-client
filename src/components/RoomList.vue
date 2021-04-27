@@ -46,7 +46,7 @@ export default {
       isLoggedIn: 'isLoggedIn',
       getCurrentUser: 'getCurrentUser'
     }),
-    ...mapGetters('settings', {
+    ...mapGetters('websocket', {
       isNoConnection: 'isNoConnection'
     })
   },
