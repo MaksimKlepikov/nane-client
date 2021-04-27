@@ -1,0 +1,3 @@
+export const SET_SOCKET = 'SET_SOCKET'
+export const SET_CONNECTED = 'SET_CONNECTED'
+export const SET_DISCONNECTED = 'SET_DISCONNECTED'

@@ -21,19 +21,25 @@ export async function fetchByRoom ({ commit }, roomId) {
     }
   )
 }
-export async function newMessage ({ commit, getters }, newMessage) {
+export async function newMessage ({ commit, getters, rootGetters, dispatch }, newMessage) {
   const message = {
     ...newMessage,
     id: newMessage.room + newMessage.sender.username + newMessage.created,
     created: new Date(newMessage.created)
+  }
+  if (!rootGetters['room/isRoomExist'](message.room)) {
+    await dispatch('room/addRoom', {
+      name: message.room,
+      last_message: message
+    }, { root: true })
   }
   if (!getters.isRoomExist(message.room)) {
     commit(SET_ROOM, message.room)
   }
   commit(ADD_MESSAGE, message)
 }
-export async function sendMessage ({ commit, getters }, newMessage) {
-  this._vm.$socket.sendObj(newMessage)
+export async function sendMessage ({ dispatch }, newMessage) {
+  await dispatch('websocket/sendJSON', JSON.stringify(newMessage), { root: true })
 }
 export async function outdateAll ({ commit }) {
   commit(SET_ALL_OUTDATED)

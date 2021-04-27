@@ -18,26 +18,27 @@
           </div>
         </template>
 
-        <q-inner-loading
-          class="bg-grey-3"
-          :showing="isMessagesLoading"
-        >
-          <q-spinner-tail
-            color="primary"
-            size="2em"
-          />
-        </q-inner-loading>
         <q-space class="col" />
         <div class="row">
           <chat-message
             v-for="message in messagesToShow"
             :key="message.id"
             :message="message"
+            :current-user="getCurrentUser"
             class="col-12 col-md-7"
           />
         </div>
       </q-infinite-scroll>
     </div>
+    <q-inner-loading
+      class="fixed-center transparent"
+      :showing="isMessagesLoading"
+    >
+      <q-spinner-tail
+        color="primary"
+        size="2em"
+      />
+    </q-inner-loading>
     <q-toolbar
       v-if="isLoggedIn"
       class="col-auto row q-py-xs text-black"
@@ -57,11 +58,12 @@
       />
       <q-btn
         round
-        :disable="isNoConnection"
+        :disable="isNoConnection || messageToSendText.length === 0"
         flat
         color="primary"
         icon="send"
         @click="sendNewMessage"
+        @keypress.prevent
       />
     </q-toolbar>
     <q-toolbar
@@ -120,13 +122,12 @@ export default {
       isMessagesOutdated: 'isMessagesOutdated'
     }),
     ...mapGetters('settings', {
-      isNoConnection: 'isNoConnection',
       maxLength: 'getMaxLengthSettings',
       pageSize: 'getPageSize'
     }),
-    isRoomMessagesOutdated () {
-      return this.isMessagesOutdated(this.roomId)
-    },
+    ...mapGetters('websocket', {
+      isNoConnection: 'isNoConnection'
+    }),
     roomId () {
       return this.$route.params.roomId
     },

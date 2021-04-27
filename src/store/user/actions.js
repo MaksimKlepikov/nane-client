@@ -10,12 +10,7 @@ export async function login ({ commit, dispatch, getters }, username) {
   if (newUser.username === 'anonymous') {
     return dispatch('loginAsAnonymous')
   }
-  this._vm.$disconnect()
-  this._vm.$connect(process.env.API_WS + `?username=${newUser.username}`, {
-    connectManually: true,
-    reconnection: false,
-    format: 'json'
-  })
+  dispatch('websocket/connect', newUser.username, { root: true })
   commit(SET_CURRENT_USER, newUser)
   if (!getters.getUsers.some(user => user.username === newUser.username)) {
     commit(ADD_USER, newUser)
@@ -27,13 +22,8 @@ export async function relogin ({ dispatch, getters }) {
   }
   return dispatch('login', getters.getCurrentUser.username)
 }
-export async function loginAsAnonymous ({ commit }) {
-  this._vm.$disconnect()
-  this._vm.$connect(process.env.API_WS + '?username=anonymous', {
-    connectManually: true,
-    reconnection: false,
-    format: 'json'
-  })
+export async function loginAsAnonymous ({ commit, dispatch }) {
+  dispatch('websocket/connect', 'anonymous', { root: true })
   commit(DELETE_CURRENT_USER)
 }
 export async function logout ({ dispatch, getters, commit }) {
